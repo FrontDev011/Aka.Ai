@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Aka.AI — Your AI. Your Companion.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f6f7fb;--pn:#fff;--tx:#0d1020;--mu:#6b7090;--bd:#e3e5f0;--ac:#6d5efc;--ac2:#18c8ff;--us:#ece9ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#07080f;--pn:#10121e;--tx:#eef0ff;--mu:#8a8fb0;--bd:#1f2236;--us:#1e1a45}}
+:root[data-theme=dark]{--bg:#07080f;--pn:#10121e;--tx:#eef0ff;--mu:#8a8fb0;--bd:#1f2236;--us:#1e1a45}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit;color:inherit}
+.g{background:linear-gradient(120deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{background:linear-gradient(120deg,var(--ac),var(--ac2));color:#fff;border:0;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:600}
+.btn.o{background:none;border:1px solid var(--bd);color:var(--tx)}
+.hide{display:none!important}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 5vw}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+.hero{text-align:center;padding:9vh 6vw 6vh;position:relative}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(500px 260px at 50% 0,rgba(109,94,252,.28),transparent),radial-gradient(400px 220px at 80% 30%,rgba(24,200,255,.18),transparent);pointer-events:none}
+.hero h1{font-size:clamp(34px,7vw,68px);line-height:1.05;margin:0 0 16px;letter-spacing:-2px;position:relative}
+.hero p{color:var(--mu);max-width:560px;margin:0 auto 26px;position:relative}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:0 5vw 40px;max-width:1100px;margin:auto}
+.card{background:var(--pn);border:1px solid var(--bd);border-radius:18px;padding:20px}
+.card h3{margin:0 0 6px;font-size:16px}.card p{margin:0;color:var(--mu);font-size:14px}
+h2.s{text-align:center;font-size:28px;letter-spacing:-1px;margin:30px 0 18px}
+footer{text-align:center;color:var(--mu);padding:30px 5vw 50px;border-top:1px solid var(--bd);font-size:14px}
+#app{display:flex;height:100dvh}
+aside{width:270px;background:var(--pn);border-right:1px solid var(--bd);display:flex;flex-direction:column;padding:14px;gap:8px}
+aside .lst{flex:1;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.it{padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it:hover,.it.on{background:var(--us);color:var(--tx)}
+main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bd)}
+.top .sp{flex:1}.menu{display:none}
+.view{flex:1;overflow:auto;padding:18px}
+#msgs{max-width:780px;margin:auto;display:flex;flex-direction:column;gap:14px}
+.m{padding:12px 15px;border-radius:16px;white-space:pre-wrap;word-wrap:break-word;max-width:88%}
+.m.u{background:var(--us);align-self:flex-end}.m.a{background:var(--pn);border:1px solid var(--bd);align-self:flex-start}
+.empty{text-align:center;margin-top:12vh}.empty h2{font-size:30px;margin:0 0 8px;letter-spacing:-1px}
+.cmp{padding:12px 16px 16px}.box{max-width:780px;margin:auto;display:flex;gap:8px;align-items:flex-end;background:var(--pn);border:1px solid var(--bd);border-radius:18px;padding:8px}
+textarea{flex:1;border:0;background:none;resize:none;outline:none;max-height:160px;padding:8px}
+.ib{background:none;border:0;cursor:pointer;font-size:18px;padding:6px 8px;border-radius:10px}.ib:hover{background:var(--us)}
+.ib.rec{background:#ff4d6d33}
+.set{max-width:640px;margin:auto;display:flex;flex-direction:column;gap:14px}
+.set input,.set select,.set textarea{width:100%;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:10px}
+.bar{height:10px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.price{font-size:32px;font-weight:800}
+.chip{font-size:12px;color:var(--mu);border:1px solid var(--bd);border-radius:20px;padding:2px 10px;cursor:pointer}.chip.on{background:var(--us);color:var(--tx)}
+@media(max-width:760px){aside{position:fixed;inset:0 auto 0 0;z-index:5;transform:translateX(-100%);transition:.2s;padding-top:calc(14px + env(safe-area-inset-top,0px))}aside.open{transform:none}.menu{display:inline-block}}
+
+/* ===== Responsive / Mobile ===== */
+@media (max-width: 760px){
+  body{font-size:14px;overflow-x:hidden}
+
+  nav{
+    padding:14px 18px;
+    min-height:58px;
+  }
+  .logo{font-size:19px}
+
+  .hero{
+    padding:72px 20px 42px;
+  }
+  .hero h1{
+    font-size:clamp(34px,11vw,52px);
+    letter-spacing:-1.5px;
+  }
+  .hero p{
+    max-width:100%;
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:22px;
+  }
+  .hero .btn{
+    width:100%;
+    max-width:300px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+    gap:12px;
+    padding:0 18px 30px;
+    width:100%;
+  }
+  .card{
+    padding:17px;
+    border-radius:15px;
+  }
+  h2.s{
+    font-size:24px;
+    margin:28px 18px 16px;
+  }
+  footer{
+    padding:26px 18px 42px;
+  }
+
+  #app{
+    height:100dvh;
+    min-height:100dvh;
+    width:100%;
+    overflow:hidden;
+  }
+
+  aside{
+    width:min(82vw,300px);
+    max-width:300px;
+    box-shadow:10px 0 30px rgba(0,0,0,.18);
+  }
+
+  main{
+    width:100%;
+    min-width:0;
+  }
+
+  .top{
+    min-height:58px;
+    padding:10px 12px;
+    gap:6px;
+    position:relative;
+  }
+  .top .menu{
+    flex:0 0 auto;
+  }
+  #ttl{
+    max-width:34vw;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    font-size:14px;
+  }
+  .top .sp{min-width:4px}
+  .chip{
+    font-size:11px;
+    padding:5px 8px;
+    white-space:nowrap;
+  }
+
+  .view{
+    padding:12px;
+    min-width:0;
+  }
+
+  #msgs{
+    width:100%;
+    max-width:100%;
+    gap:10px;
+  }
+  .m{
+    max-width:92%;
+    padding:10px 12px;
+    border-radius:14px;
+    font-size:14px;
+    overflow-wrap:anywhere;
+  }
+
+  .empty{
+    margin-top:18vh;
+    padding:0 12px;
+  }
+  .empty h2{font-size:28px}
+
+  .cmp{
+    padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px));
+  }
+  .box{
+    width:100%;
+    max-width:100%;
+    gap:4px;
+    border-radius:16px;
+    padding:6px;
+  }
+  textarea{
+    min-width:0;
+    width:100%;
+    font-size:16px; /* prevents iOS zoom */
+    line-height:1.4;
+    max-height:120px;
+    padding:8px 6px;
+  }
+  .ib{
+    flex:0 0 auto;
+    padding:8px 7px;
+    min-width:38px;
+    min-height:38px;
+  }
+  .box .btn{
+    flex:0 0 auto;
+    min-width:42px;
+    min-height:42px;
+    padding:8px 11px;
+    border-radius:11px;
+  }
+
+  .set{
+    width:100%;
+    max-width:100%;
+    gap:12px;
+  }
+  .set input,.set select,.set textarea{
+    font-size:16px;
+  }
+  .set .card{
+    width:100%;
+  }
+
+  #v-plans .grid{
+    padding:0;
+  }
+  #v-plans .card{
+    width:100%;
+  }
+
+  .price{font-size:28px}
+
+  /* Make sidebar controls comfortable to tap */
+  aside .btn{
+    min-height:44px;
+  }
+  .it{
+    min-height:42px;
+    display:flex;
+    align-items:center;
+  }
+
+  /* Keep uploaded image previews inside the screen */
+  #pv img{
+    max-width:100%;
+    height:auto !important;
+    max-height:140px;
+    object-fit:contain;
+  }
+
+  /* Better mobile toast placement */
+  body > div[style*="position:fixed"]{
+    max-width:calc(100vw - 32px);
+    text-align:center;
+  }
+}
+
+@media (max-width: 390px){
+  nav{padding-left:14px;padding-right:14px}
+  .hero{padding-left:16px;padding-right:16px}
+  .grid{padding-left:14px;padding-right:14px}
+  h2.s{margin-left:14px;margin-right:14px}
+
+  .top{
+    padding-left:8px;
+    padding-right:8px;
+  }
+  #ttl{max-width:27vw}
+  .chip{
+    font-size:10px;
+    padding:4px 6px;
+  }
+  .cmp{
+    padding-left:6px;
+    padding-right:6px;
+  }
+  .box{padding:5px}
+  .ib{min-width:36px;padding-left:5px;padding-right:5px}
+  .box .btn{min-width:40px;padding-left:9px;padding-right:9px}
+}
+
+@media (min-width:761px) and (max-width:1000px){
+  .hero{padding-left:5vw;padding-right:5vw}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  aside{width:235px}
+}
+
+</style></head><body>
+
+<div id="land">
+<nav><span class="logo"><span class="g">Aka</span>.AI</span><span><button class="btn" onclick="enter()" data-t="start"></button></span></nav>
+<section class="hero"><h1><span class="g" data-t="tag"></span></h1><p data-t="sub"></p><button class="btn" style="padding:14px 28px" onclick="enter()" data-t="start"></button></section>
+<div class="grid" id="feat"></div>
+<h2 class="s" data-t="plans"></h2><div class="grid" id="plans"></div>
+<footer><div class="logo"><span class="g">Aka</span>.AI</div><div style="margin:6px 0">Your AI. Your Companion.</div>Founded by <b>Anasxon Anvarov</b> · © 2026 Aka.AI</footer>
+</div>
+
+<div id="app" class="hide">
+<aside id="sd"><div class="logo" style="padding:4px 8px"><span class="g">Aka</span>.AI</div>
+<button class="btn" onclick="newChat()" data-t="new"></button>
+<div class="lst" id="hist"></div>
+<div class="it" onclick="go('usage')">📊 <span data-t="usage"></span></div>
+<div class="it" onclick="go('plans')">⭐ <span data-t="plans"></span></div>
+<div class="it" onclick="go('set')">⚙️ <span data-t="set"></span></div>
+<div class="it" onclick="leave()">← Home</div></aside>
+<main>
+<div class="top"><button class="ib menu" onclick="sd.classList.toggle('open')">☰</button><b id="ttl">Aka.AI</b><span class="sp"></span>
+<span class="chip" id="cAg" onclick="tgl('agent')">🤖 Agent</span><span class="chip" id="cTs" onclick="tgl('tts')">🔊 TTS</span></div>
+<div class="view" id="v-chat"><div id="msgs"></div></div>
+<div class="view hide" id="v-usage"><div class="set"><h2 data-t="usage"></h2><div class="card"><div id="uTxt"></div><div class="bar" style="margin-top:10px"><i id="uBar"></i></div></div><div class="card"><div id="uStat"></div></div></div></div>
+<div class="view hide" id="v-plans"><div class="set"><div class="grid" id="plans2" style="padding:0"></div></div></div>
+<div class="view hide" id="v-set"><div class="set"><h2 data-t="set"></h2>
+<label data-t="name"></label><input id="nm" oninput="S.name=this.value;save()">
+<label data-t="mem"></label><textarea id="mm" rows="5" oninput="S.mem=this.value;save()"></textarea>
+<label>Theme</label><select id="th" onchange="theme(this.value)"><option value="">Auto</option><option>light</option><option>dark</option></select>
+<button class="btn o" onclick="if(this.dataset.s){S=def();save();location.reload()}else{this.dataset.s=1;this.textContent='Click again to confirm'}">🗑 Clear all data</button></div></div>
+<div class="cmp" id="cmp"><div id="pv" style="max-width:780px;margin:0 auto 6px"></div><div class="box"><label class="ib" title="File">📎<input type="file" id="fi" accept=".txt,.md,.csv,.json,.js,.py,.html,image/*" hidden onchange="file(this)"></label>
+<textarea id="in" rows="1" data-p="ph" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&innerWidth>760){event.preventDefault();send()}"></textarea>
+<button class="ib" id="mic" onclick="mic()">🎤</button><button class="btn" id="sb" onclick="busy?ac.abort():send()">➤</button></div></div>
+</main></div>
+
+<script>
+const T={en:{tag:"Your AI. Your Companion.",sub:"A premium assistant that talks like a human, remembers what matters, and is always ready to help.",start:"Get started",new:"+ New chat",usage:"Usage",plans:"Plans",set:"Settings",name:"Your name",mem:"Personal memory (Aka remembers this)",ph:"Message Aka.AI…",hi:"How can I help today?",lim:"Daily limit reached. Upgrade to Premium.",left:"messages today",total:"Total messages",chats:"Chats"},
+uz:{tag:"Sizning AI. Sizning hamrohingiz.",sub:"Inson kabi suhbatlashadigan, muhimini eslab qoladigan premium yordamchi. O‘zbek, ingliz va rus tillarida.",start:"Boshlash",new:"+ Yangi suhbat",usage:"Foydalanish",plans:"Tariflar",set:"Sozlamalar",name:"Ismingiz",mem:"Shaxsiy xotira (Aka buni eslab qoladi)",ph:"Aka.AI ga yozing…",hi:"Bugun qanday yordam beray?",lim:"Kunlik limit tugadi. Premium ga o‘ting.",left:"xabar bugun",total:"Jami xabarlar",chats:"Suhbatlar"},
+ru:{tag:"Ваш ИИ. Ваш спутник.",sub:"Премиум-ассистент, который говорит по-человечески, помнит важное и знает узбекский, английский и русский.",start:"Начать",new:"+ Новый чат",usage:"Использование",plans:"Тарифы",set:"Настройки",name:"Ваше имя",mem:"Личная память (Aka это помнит)",ph:"Напишите Aka.AI…",hi:"Чем помочь сегодня?",lim:"Дневной лимит исчерпан. Перейдите на Premium.",left:"сообщений сегодня",total:"Всего сообщений",chats:"Чатов"}};
+const LN={en:"English",uz:"O‘zbek",ru:"Русский"},LIM=30;
+const F=[["💬","Human-like chat","Natural, context-aware conversation with history and personal memory."],["🎙️","Voice","Speak to Aka and hear answers back, in your language."],["📎","File analysis","Attach text, code, CSV or JSON files for instant analysis."],["🤖","Agent mode","Multi-step tasks: Aka plans, then executes step by step."],["🌍","Always on","Fast, clear answers any time of day."],["🔒","Private by design","Your history and memory stay in your own browser."]];
+const P=[["Free","$0","30 messages / day · chat · voice · memory"],["Premium","$9/mo","Higher limits · image generation · priority · coming soon"],["Pro","$19/mo","Unlimited · code execution · live web search · coming soon"]];
+function def(){return{chats:[],cur:null,mem:"",name:"",lang:"en",d:"",n:0,tot:0,agent:0,tts:0,th:""}}
+let S=def();try{S={...S,...JSON.parse(localStorage.getItem("aka")||"{}")}}catch(e){}
+function save(){try{localStorage.setItem("aka",JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id),t=k=>T[S.lang][k];
+function i18n(){document.querySelectorAll("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll("[data-p]").forEach(e=>e.placeholder=t(e.dataset.p));document.documentElement.lang=S.lang;renderCards();if(!$("app").classList.contains("hide"))render()}
+function lang(){const k=Object.keys(T);S.lang=k[(k.indexOf(S.lang)+1)%3];save();i18n()}
+function theme(v){S.th=v;save();v?document.documentElement.dataset.theme=v:delete document.documentElement.dataset.theme}
+function renderCards(){$("feat").innerHTML=F.map(f=>`<div class="card"><div style="font-size:24px">${f[0]}</div><h3>${f[1]}</h3><p>${f[2]}</p></div>`).join("");const p=P.map((x,i)=>`<div class="card" ${i==1?'style="border-color:var(--ac)"':''}><h3>${x[0]}</h3><div class="price">${x[1]}</div><p>${x[2]}</p></div>`).join("");$("plans").innerHTML=$("plans2").innerHTML=p}
+function enter(){$("land").classList.add("hide");$("app").classList.remove("hide");if(!S.chats.length)newChat();else render();go("chat")}
+function leave(){$("app").classList.add("hide");$("land").classList.remove("hide")}
+function go(v){["chat","usage","plans","set"].forEach(x=>$("v-"+x).classList.toggle("hide",x!=v));$("cmp").classList.toggle("hide",v!="chat");sd.classList.remove("open");if(v=="usage")usage();if(v=="set"){$("nm").value=S.name;$("mm").value=S.mem;$("th").value=S.th}}
+function newChat(){const c={id:Date.now(),title:"New chat",msgs:[]};S.chats.unshift(c);S.cur=c.id;save();render();go("chat")}
+function delChat(id){S.chats=S.chats.filter(c=>c.id!=id);if(S.cur==id)S.cur=S.chats[0]?S.chats[0].id:null;if(!S.chats.length){newChat();return}save();render()}
+function toast(m){const d=document.createElement("div");d.textContent=m;d.style.cssText="position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:9";document.body.appendChild(d);setTimeout(()=>d.remove(),3000)}
+function cur(){return S.chats.find(c=>c.id==S.cur)||S.chats[0]}
+function tgl(k){S[k]=!S[k];save();render()}
+let editing=null;
+function render(){$("cAg").classList.toggle("on",!!S.agent);$("cTs").classList.toggle("on",!!S.tts);$("hist").innerHTML="";S.chats.forEach(c=>{const d=document.createElement("div");d.className="it"+(c.id==S.cur?" on":"");d.style.display="flex";const sp=document.createElement("span");sp.textContent=c.title;sp.style.cssText="flex:1;overflow:hidden;text-overflow:ellipsis";const x=document.createElement("span");x.textContent="✕";x.title="Delete chat";x.onclick=e=>{e.stopPropagation();delChat(c.id)};const ed=document.createElement("span");ed.textContent="✎";ed.title="Rename";ed.style.margin="0 8px";ed.onclick=e=>{e.stopPropagation();editing=c.id;render()};
+if(editing==c.id){const inp=document.createElement("input");inp.value=c.title;inp.style.cssText="flex:1;min-width:0;background:var(--bg);border:1px solid var(--ac);border-radius:6px;color:var(--tx);padding:2px 6px";const done=()=>{inp.onblur=null;const v=inp.value.trim();if(v)c.title=v.slice(0,60);editing=null;save();render()};inp.onkeydown=e=>{if(e.key==="Enter")done();if(e.key==="Escape"){inp.onblur=null;editing=null;render()}};inp.onclick=e=>e.stopPropagation();inp.onblur=done;d.append(inp);setTimeout(()=>inp.focus(),0)}else d.append(sp,ed,x);d.onclick=()=>{S.cur=c.id;save();render();go("chat")};$("hist").appendChild(d)});const c=cur();$("ttl").textContent=c?c.title:"Aka.AI";const m=$("msgs");m.innerHTML="";if(!c||!c.msgs.length){m.innerHTML=`<div class="empty"><h2 class="g">Aka.AI</h2><div style="color:var(--mu)">${S.name?S.name+" — ":""}${t("hi")}</div></div>`;return}c.msgs.forEach(x=>bub(x.r,x.c,x.img))}
+async function thumb(f){const bm=await createImageBitmap(f),k=Math.min(1,900/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext("2d").drawImage(bm,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.8)}
+function sc(f){const v=$("v-chat");if(f||v.scrollHeight-v.scrollTop-v.clientHeight<140)v.scrollTop=1e9}
+function d2b(u){const p=u.split(","),m=p[0].match(/:(.*?);/)[1],b=atob(p[1]),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:m})}
+function addImg(d,u,nodl){const im=document.createElement("img");im.src=u;im.style.cssText="display:block;max-width:100%;border-radius:12px;margin-top:8px";const b=document.createElement("button");b.className="btn o";b.textContent="⬇ Download";b.style.marginTop="8px";b.onclick=async()=>{try{const dl=await claude.use("downloads");if(!dl){toast("Download unavailable");return}await dl.save({filename:"aka-ai-edit.jpg",data:d2b(u)})}catch(e){}};nodl?d.append(im):d.append(im,b)}
+function bub(r,c,img){const d=document.createElement("div");d.className="m "+(r=="user"?"u":"a");const t=document.createElement("span");t.textContent=c;d.appendChild(t);if(img)addImg(d,img,r=="user");$("msgs").appendChild(d);sc(1);return t.parentNode}
+let att="",imgFile=null;
+function file(i){const f=i.files[0];i.value="";if(!f)return;
+if(f.type.startsWith("image/")){if(f.size>15e6){toast("Max 15 MB");return}imgFile=f;$("pv").innerHTML="";const im=document.createElement("img");im.src=URL.createObjectURL(f);im.style.cssText="height:56px;border-radius:10px;border:1px solid var(--bd)";const x=document.createElement("span");x.textContent=" ✕";x.style.cursor="pointer";x.onclick=()=>{imgFile=null;$("pv").innerHTML=""};$("pv").append(im,x);$("in").focus();return}
+if(f.size>200000){toast("Max 200 KB");return}const r=new FileReader();r.onload=()=>{att=`\n\n[Attached file: ${f.name}]\n${r.result}`;$("in").value=($("in").value||"Analyze this file.")+" 📎"+f.name};r.readAsText(f)}
+const OPS={brightness:"%",contrast:"%",saturate:"%",grayscale:"%",sepia:"%",invert:"%",blur:"px",hue:"deg"};
+async function editImg(f,ops){const bm=await createImageBitmap(f);let k=Math.min(1,1600/Math.max(bm.width,bm.height)),cv=document.createElement("canvas");cv.width=Math.round(bm.width*k);cv.height=Math.round(bm.height*k);cv.getContext("2d").drawImage(bm,0,0,cv.width,cv.height);
+for(const o of ops){const W=cv.width,H=cv.height,n=document.createElement("canvas"),x=n.getContext("2d");n.width=W;n.height=H;
+if(o.op in OPS){const v=Math.max(0,Math.min(o.op=="blur"?30:o.op=="hue"?360:500,+o.value||0));x.filter=(o.op=="hue"?"hue-rotate":o.op)+"("+v+OPS[o.op]+")";x.drawImage(cv,0,0)}
+else if(o.op=="rotate"){const a=((+o.value%360)+360)%360;if(a%180){n.width=H;n.height=W}x.translate(n.width/2,n.height/2);x.rotate(a*Math.PI/180);x.drawImage(cv,-W/2,-H/2)}
+else if(o.op=="flip"){x.translate(o.value=="v"?0:W,o.value=="v"?H:0);x.scale(o.value=="v"?1:-1,o.value=="v"?-1:1);x.drawImage(cv,0,0)}
+else if(o.op=="crop"){const c=o.value||{};const cx=Math.max(0,Math.min(.95,+c.x||0)),cy=Math.max(0,Math.min(.95,+c.y||0)),cw=Math.min(1-cx,+c.w||1),ch=Math.min(1-cy,+c.h||1);n.width=Math.round(W*cw);n.height=Math.round(H*ch);x.drawImage(cv,cx*W,cy*H,W*cw,H*ch,0,0,n.width,n.height)}
+else if(o.op=="text"){x.drawImage(cv,0,0);const c=o.value||{},sz=Math.max(3,Math.min(25,+c.size||8))/100*H;x.font="800 "+sz+"px Inter,Arial,sans-serif";x.textAlign="center";x.textBaseline="middle";x.lineWidth=sz/8;x.strokeStyle="#000";x.fillStyle=/^#?[\w]+$/.test(c.color||"")?c.color:"#fff";const y=c.pos=="top"?sz:c.pos=="center"?H/2:H-sz;x.strokeText(String(c.text||"").slice(0,80),W/2,y,W*.95);x.fillText(String(c.text||"").slice(0,80),W/2,y,W*.95)}
+else continue;cv=n}
+return cv.toDataURL("image/jpeg",.88)}
+const IMGP=`You are the image assistant of Aka.AI. Look at the attached image and the user's request. Reply ONLY with JSON: {"reply":"short friendly English message","ops":[...]}.
+If the user wants the image changed, put edit operations in ops, applied in order. Allowed ops: {"op":"brightness|contrast|saturate","value":percent, 100=unchanged}, {"op":"grayscale|sepia|invert","value":0-100}, {"op":"blur","value":px}, {"op":"hue","value":degrees}, {"op":"rotate","value":90|180|270}, {"op":"flip","value":"h"|"v"}, {"op":"crop","value":{"x":0-1,"y":0-1,"w":0-1,"h":0-1}}, {"op":"text","value":{"text":"...","pos":"top|center|bottom","color":"white","size":3-20}}.
+If the user only asks about the image, answer in reply and use ops [].
+If they ask for something these ops cannot do (removing objects or backgrounds, adding new objects, redrawing), say so honestly in reply and use ops [].`;
+function usage(){const today=new Date().toDateString();if(S.d!=today){S.d=today;S.n=0}const left=Math.max(0,LIM-S.n);$("uTxt").textContent=`${left}/${LIM} ${t("left")}`;$("uBar").style.width=(S.n/LIM*100)+"%";$("uStat").innerHTML=`${t("total")}: <b>${S.tot}</b><br>${t("chats")}: <b>${S.chats.length}</b>`}
+let busy=0,ac,tgt="",shown=0,run=0,fin=0;
+function pump(o){if(run)return;run=1;const f=()=>{if(shown<tgt.length){shown+=Math.max(1,Math.ceil((tgt.length-shown)/10));o.firstChild.textContent=tgt.slice(0,shown);sc()}if(shown<tgt.length||!fin)requestAnimationFrame(f);else run=0};requestAnimationFrame(f)}
+async function send(){const inp=$("in");let txt=inp.value.trim();if(!txt&&imgFile)txt="Describe this image.";if(!txt||busy)return;usage();if(S.n>=LIM){toast(t("lim"));return}
+const c=cur();if(att){txt+=att;att=""}const f=imgFile;imgFile=null;$("pv").innerHTML="";inp.value="";inp.style.height="auto";if(!c.msgs.length)c.title=txt.slice(0,32);const ti=f?await thumb(f).catch(()=>null):null;c.msgs.push({r:"user",c:txt,img:ti});S.n++;S.tot++;save();render();
+const sample=await claude.use("sample");const out=bub("assistant","Thinking…");
+if(!sample){out.firstChild.textContent="AI runtime unavailable here. Open this page inside Claude to chat.";return}
+busy=1;$("sb").textContent="■";ac=new AbortController();
+try{
+if(f){out.firstChild.textContent="Analyzing image… 0s";
+let j,secs=0;const tm=setInterval(()=>{out.firstChild.textContent="Analyzing image… "+(++secs)+"s"},1000),to=setTimeout(()=>ac.abort(),120000);
+try{const rr=await sample([{role:"user",content:IMGP+"\nUser request: "+txt}],{images:f,cache:false,modelTier:"quick",signal:ac.signal});const m=rr.text.match(/\{[\s\S]*\}/);try{j=JSON.parse(m[0])}catch(e){j={reply:rr.text,ops:[]}}}finally{clearInterval(tm);clearTimeout(to)}
+const ops=Array.isArray(j.ops)?j.ops.slice(0,12):[];let img=null;if(ops.length){try{img=await editImg(f,ops)}catch(e){j.reply=(j.reply||"")+" (Editing is not supported in this browser.)"}}
+const msg=j.reply||"Done.";out.firstChild.textContent=msg;if(img)addImg(out,img);c.msgs.push({r:"assistant",c:msg,img});save();if(S.tts)speak(msg)}
+else{
+const sys=`You are Aka.AI, a warm, smart, human-like AI companion built by founder Anasxon Anvarov. Always reply in English. Be concise, honest and genuinely helpful. ${S.name?"User's name: "+S.name+".":""} ${S.mem?"Personal memory about the user: "+S.mem:""} ${S.agent?"AGENT MODE: for multi-step tasks, first write a short numbered plan, then execute every step and give the final result.":""} You cannot browse the web or run code in this environment; say so if asked.`;
+const turns=c.msgs.slice(-20).map(m=>({role:m.r=="user"?"user":"assistant",content:m.c}));turns[0]={role:"user",content:sys+"\n\n---\n"+turns[0].content};if(turns[0].role!="user")turns.shift();
+tgt="";shown=0;fin=0;out.firstChild.textContent="";
+const r=await sample(turns,{cache:false,signal:ac.signal,onText:({text})=>{tgt=text;pump(out)}});
+tgt=r.text;fin=1;pump(out);await new Promise(res=>{const w=()=>shown>=tgt.length?res():setTimeout(w,30);w()});
+c.msgs.push({r:"assistant",c:r.text});save();if(S.tts)speak(r.text)}
+}catch(e){fin=1;out.firstChild.textContent=(tgt?tgt+"\n\n":"")+(e.code=="cancelled"?"Stopped.":"⚠️ "+(e.message||e.code||"Error"))}
+busy=0;$("sb").textContent="➤";render()}
+function speak(x){try{const u=new SpeechSynthesisUtterance(x.slice(0,600));u.lang={en:"en-US",uz:"uz-UZ",ru:"ru-RU"}[S.lang];speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+let rec;function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){toast("Voice input is not supported in this browser.");return}if(rec){rec.stop();return}rec=new R();rec.lang={en:"en-US",uz:"uz-UZ",ru:"ru-RU"}[S.lang];rec.interimResults=true;$("mic").classList.add("rec");rec.onresult=e=>{$("in").value=[...e.results].map(r=>r[0].transcript).join("")};rec.onend=()=>{rec=null;$("mic").classList.remove("rec")};try{rec.start()}catch(e){rec=null}}
+$("in").addEventListener("input",function(){this.style.height="auto";this.style.height=this.scrollHeight+"px"});
+S.lang="en";theme(S.th);i18n();
+</script></body></html>
